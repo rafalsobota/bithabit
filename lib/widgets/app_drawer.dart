@@ -29,9 +29,9 @@ class AppDrawer extends StatelessWidget {
           //   label: ,
           // ),
           ListTile(
-            leading: Icon(Icons.account_circle),
+            leading: const Icon(Icons.account_circle),
             title: Text(
-              context.read<Auth>().email ?? 'Unknown User',
+              context.watch<Auth>().email ?? 'Unknown User',
             ),
           ),
           Divider(),

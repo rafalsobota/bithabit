@@ -75,6 +75,7 @@ class Auth with ChangeNotifier {
       final userData = json.encode({
         'token': _token,
         'userId': _userId,
+        'email': email,
         'expiryDate': _expiryDate?.toIso8601String()
       });
       prefs.setString('userData', userData);
@@ -110,6 +111,7 @@ class Auth with ChangeNotifier {
 
     _token = userData['token'];
     _userId = userData['userId'];
+    _email = userData['email'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
