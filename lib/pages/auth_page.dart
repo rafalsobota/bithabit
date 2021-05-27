@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:bithabit/models/http_exception.dart';
 import 'package:bithabit/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'home_page.dart';
 
 enum AuthMode { login, signup }
 
@@ -10,19 +14,25 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => _AuthPageState();
 }
 
+const shape = RoundedRectangleBorder(
+  borderRadius: BorderRadius.all(
+    Radius.circular(8),
+  ),
+);
+
 class _AuthPageState extends State<AuthPage> {
-  final buttonStyle =
-      ElevatedButton.styleFrom(visualDensity: VisualDensity.standard);
+  // final buttonStyle =
+  //     ElevatedButton.styleFrom(visualDensity: VisualDensity.standard);
 
   final mainButtonStyle = ElevatedButton.styleFrom(
     elevation: 0,
     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-    shape: const ContinuousRectangleBorder(),
+    shape: shape,
   );
 
   final secondaryButtonStyle = OutlinedButton.styleFrom(
     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-    shape: const ContinuousRectangleBorder(),
+    shape: shape,
   );
 
   final inputPadding = const EdgeInsets.only(top: 8.0, left: 8, right: 8);
@@ -37,7 +47,6 @@ class _AuthPageState extends State<AuthPage> {
 
   String _email = '';
   String _password = '';
-  String _passwordConfirmation = '';
 
   bool _isLoading = false;
 
@@ -53,15 +62,26 @@ class _AuthPageState extends State<AuthPage> {
           child: const Text('Signup Instead'),
           style: secondaryButtonStyle,
         ),
-        ElevatedButton(
-          onPressed: _isLoading
-              ? null
-              : () {
-                  _submit();
-                },
-          child: const Text('Login'),
-          style: mainButtonStyle,
-        ),
+        _isLoading
+            ? ElevatedButton.icon(
+                onPressed: () {},
+                label: const Text('Login'),
+                icon: const SizedBox(
+                  height: 15,
+                  child: FittedBox(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                style: mainButtonStyle,
+              )
+            : ElevatedButton(
+                onPressed: _submit,
+                child: const Text('Login'),
+                style: mainButtonStyle,
+              ),
       ],
     );
   }
@@ -128,9 +148,16 @@ class _AuthPageState extends State<AuthPage> {
         // Sign user up
         await context.read<Auth>().signup(_email, _password);
       }
+
       setState(() {
         _isLoading = false;
       });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
 
@@ -190,6 +217,7 @@ class _AuthPageState extends State<AuthPage> {
                             border: InputBorder.none,
                             filled: true,
                           ),
+                          autofocus: true,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: (value) {
@@ -262,9 +290,6 @@ class _AuthPageState extends State<AuthPage> {
                                     }
                                     return null;
                                   },
-                            onSaved: (value) {
-                              _passwordConfirmation = value ?? '';
-                            },
                             onFieldSubmitted: (value) {
                               _submit();
                             },

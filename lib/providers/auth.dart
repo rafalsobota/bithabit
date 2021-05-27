@@ -70,7 +70,6 @@ class Auth with ChangeNotifier {
           seconds: int.parse(responseData['expiresIn']),
         ),
       );
-      notifyListeners();
       _autoLogout();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -83,6 +82,9 @@ class Auth with ChangeNotifier {
       print(error);
       rethrow;
     }
+    print('_authentication succeesed, notify views');
+    notifyListeners();
+    print('_authentication future completed');
   }
 
   Future<void> signup(String email, String password) async {

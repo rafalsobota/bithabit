@@ -1,6 +1,9 @@
+import 'package:bithabit/pages/auth_page.dart';
 import 'package:bithabit/providers/auth.dart';
+import 'package:bithabit/providers/sounds.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -8,20 +11,37 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerLink(
-            label: 'Today',
+          // DrawerLink(
+          //   label: 'Today',
+          //   onTap: () {
+          //     SystemSound.play(SystemSoundType.click);
+          //     HapticFeedback.selectionClick();
+          //   },
+          // ),
+          // DrawerLink(
+          //   label: 'Goals',
+          // ),
+          // DrawerLink(
+          //   label: 'Summary',
+          // ),
+          // const SizedBox(height: 100),
+          // DrawerLink(
+          //   label: ,
+          // ),
+          ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text(
+              context.read<Auth>().email ?? 'Unknown User',
+            ),
           ),
-          DrawerLink(
-            label: 'Goals',
-          ),
-          DrawerLink(
-            label: 'Summary',
-          ),
-          const SizedBox(height: 100),
+          Divider(),
           DrawerLink(
             label: 'Logout',
             onTap: () {
               context.read<Auth>().logout();
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => AuthPage()));
             },
             danger: true,
           ),
@@ -44,13 +64,12 @@ class DrawerLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Padding(
-        padding: const EdgeInsets.only(left: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w300,
-            height: 2,
             color: danger ? Colors.red : null,
           ),
         ),

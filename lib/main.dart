@@ -1,11 +1,14 @@
 import 'package:bithabit/providers/goals.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'models/config.dart';
 import 'pages/auth_page.dart';
 import 'pages/home_page.dart';
 import 'providers/auth.dart';
+import 'providers/sounds.dart';
+import 'widgets/app_drawer.dart';
 
 void main() {
   const config = Config(
@@ -24,6 +27,7 @@ class BithabitApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth(config)),
@@ -31,6 +35,10 @@ class BithabitApp extends StatelessWidget {
           create: (context) => Goals(auth: Auth(config)),
           update: (_, auth, goals) => (goals ?? Goals(auth: auth))..auth = auth,
         ),
+        Provider(
+          create: (_) => Sounds(),
+          lazy: false,
+        )
       ],
       child: MaterialApp(
         title: 'Bithabit',
@@ -39,22 +47,27 @@ class BithabitApp extends StatelessWidget {
           errorColor: Colors.red,
           fontFamily: 'OpenSans',
         ),
-        home: Consumer<Auth>(
-          builder: (ctx, authData, _) {
-            return authData.isAuth
-                ? HomePage()
-                : FutureBuilder(
-                    future: authData.tryAutoLogin(),
-                    builder: (ctx, authResultSnapshot) {
-                      return authResultSnapshot.connectionState ==
-                              ConnectionState.waiting
-                          ? Scaffold()
-                          : AuthPage();
-                    },
-                  );
-          },
-        ),
+        home: AuthGuard(),
       ),
     );
+  }
+}
+
+class AuthGuard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return context.read<Auth>().isAuth
+        ? HomePage()
+        : FutureBuilder(
+            future: context.read<Auth>().tryAutoLogin(),
+            builder: (ctx, AsyncSnapshot<bool> authResultSnapshot) {
+              return authResultSnapshot.connectionState ==
+                      ConnectionState.waiting
+                  ? Scaffold()
+                  : authResultSnapshot.data ?? false
+                      ? HomePage()
+                      : AuthPage();
+            },
+          );
   }
 }
