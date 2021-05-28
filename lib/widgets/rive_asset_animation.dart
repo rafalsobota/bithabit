@@ -37,7 +37,7 @@ class _RiveAssetAnimationState extends State<RiveAssetAnimation> {
       children: [
         if (widget.background != null) widget.background!,
         AnimatedOpacity(
-          duration: const Duration(milliseconds: 600),
+          duration: const Duration(milliseconds: 300),
           opacity: _riveArtboard == null ? 0.0 : 1.0,
           child: _riveArtboard == null
               ? Container()

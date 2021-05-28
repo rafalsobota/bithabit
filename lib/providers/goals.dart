@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:bithabit/models/goal.dart';
 import 'package:bithabit/models/http_exception.dart';
@@ -210,10 +211,13 @@ class Goals with ChangeNotifier {
       print('Goal not found for id ${goal.id}');
       return Future.value();
     }
-    final url = Uri.parse(
-      '$databaseURL/goals/$userId/${goal.id}.json?auth=$token',
-    );
+    final oldGoal = _goals[goalIndex];
+    _goals[goalIndex] = goal;
+    notifyListeners();
     try {
+      final url = Uri.parse(
+        '$databaseURL/goals/$userId/${goal.id}.json?auth=$token',
+      );
       final response = await http.put(
         url,
         body: json.encode({
@@ -224,11 +228,15 @@ class Goals with ChangeNotifier {
           'lastCompletionDate': goal.lastCompletionDate?.toIso8601String(),
         }),
       );
-      _goals[goalIndex] = goal;
-      notifyListeners();
+      if (response.statusCode >= 400) {
+        print(response.body);
+        throw HttpException('Update failed');
+      }
     } catch (error) {
       print(error);
-      throw error;
+      _goals[goalIndex] = oldGoal;
+      notifyListeners();
+      rethrow;
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'models/config.dart';
 import 'pages/auth_page.dart';
 import 'pages/home_page.dart';
+import 'pages/home_page.dart';
 import 'providers/auth.dart';
 import 'providers/sounds.dart';
 import 'widgets/app_drawer.dart';

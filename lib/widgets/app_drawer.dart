@@ -8,34 +8,25 @@ import 'package:flutter/services.dart';
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final email = context.watch<Auth>().email ?? '';
+    final nick = email.split('@')[0];
     return Drawer(
       child: ListView(
         children: [
-          // DrawerLink(
-          //   label: 'Today',
-          //   onTap: () {
-          //     SystemSound.play(SystemSoundType.click);
-          //     HapticFeedback.selectionClick();
-          //   },
-          // ),
-          // DrawerLink(
-          //   label: 'Goals',
-          // ),
-          // DrawerLink(
-          //   label: 'Summary',
-          // ),
-          // const SizedBox(height: 100),
-          // DrawerLink(
-          //   label: ,
-          // ),
-          ListTile(
-            leading: const Icon(Icons.account_circle),
-            title: Text(
-              context.watch<Auth>().email ?? 'Unknown User',
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              child: Text(
+                'Bithabit',
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w300),
+              ),
             ),
           ),
           Divider(),
+          DrawerLink(label: nick, icon: Icons.account_circle_outlined),
+          Divider(),
           DrawerLink(
+            icon: Icons.logout,
             label: 'Logout',
             onTap: () {
               context.read<Auth>().logout();
@@ -55,20 +46,34 @@ class DrawerLink extends StatelessWidget {
   final String label;
   final void Function()? onTap;
   final bool danger;
+  final IconData? icon;
 
   const DrawerLink(
-      {Key? key, required this.label, this.onTap, this.danger = false})
+      {Key? key,
+      required this.label,
+      this.onTap,
+      this.icon,
+      this.danger = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: icon == null
+          ? null
+          : Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Icon(
+                icon,
+                color: danger ? Colors.red.shade300 : null,
+              ),
+            ),
       title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 24,
             fontWeight: FontWeight.w300,
             color: danger ? Colors.red : null,
           ),

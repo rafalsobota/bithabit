@@ -38,6 +38,8 @@ class _NewGoalTileState extends State<NewGoalTile> {
 
   @override
   Widget build(BuildContext context) {
+    final noGoals = context.watch<Goals>().activeGoals.isEmpty;
+
     return Material(
       color: Colors.transparent,
       child: ListTile(
@@ -66,7 +68,7 @@ class _NewGoalTileState extends State<NewGoalTile> {
                   _submit(value);
                 },
                 style: const TextStyle(
-                  fontSize: 30,
+                  fontSize: 24,
                   fontWeight: FontWeight.w300,
                 ),
                 decoration: const InputDecoration(
@@ -75,7 +77,7 @@ class _NewGoalTileState extends State<NewGoalTile> {
                   filled: true,
                 ),
               )
-            : context.read<Goals>().activeGoals.isEmpty
+            : noGoals
                 ? const Text(
                     'Add the first goal',
                     style: TextStyle(

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:bithabit/models/http_exception.dart';
+import 'package:bithabit/pages/home_page.dart';
 import 'package:bithabit/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
