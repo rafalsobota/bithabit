@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: AppDrawer(),
       body: Theme(
         data: ThemeData(

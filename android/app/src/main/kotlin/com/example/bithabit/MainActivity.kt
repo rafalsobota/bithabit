@@ -1,4 +1,4 @@
-package com.example.bithabit
+package app.bithabit
 
 import io.flutter.embedding.android.FlutterActivity
 

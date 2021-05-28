@@ -21,7 +21,10 @@ class _RiveAssetAnimationState extends State<RiveAssetAnimation> {
   @override
   void initState() {
     super.initState();
-    rootBundle.load(widget.asset).then(
+    Future.delayed(
+      const Duration(milliseconds: 300),
+      () => rootBundle.load(widget.asset),
+    ).then(
       (data) async {
         final file = rive.RiveFile.import(data);
         final artboard = file.mainArtboard;

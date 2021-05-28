@@ -6,10 +6,8 @@ import 'package:provider/provider.dart';
 import 'models/config.dart';
 import 'pages/auth_page.dart';
 import 'pages/home_page.dart';
-import 'pages/home_page.dart';
 import 'providers/auth.dart';
 import 'providers/sounds.dart';
-import 'widgets/app_drawer.dart';
 
 void main() {
   const config = Config(
@@ -64,7 +62,7 @@ class AuthGuard extends StatelessWidget {
             builder: (ctx, AsyncSnapshot<bool> authResultSnapshot) {
               return authResultSnapshot.connectionState ==
                       ConnectionState.waiting
-                  ? Scaffold()
+                  ? const Scaffold()
                   : authResultSnapshot.data ?? false
                       ? HomePage()
                       : AuthPage();
