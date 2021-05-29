@@ -14,6 +14,11 @@ class Goals with ChangeNotifier {
   Auth _auth;
 
   List<Goal> _goals = [];
+  bool _goalsLoaded = false;
+
+  bool get areGoalsLoaded {
+    return _goalsLoaded;
+  }
 
   Config get config {
     return _auth.config;
@@ -34,9 +39,13 @@ class Goals with ChangeNotifier {
   set auth(Auth value) {
     print('Goals.auth= ${value}');
     if (_auth.userId != value.userId) {
+      _auth = value;
       _goals = [];
+      _goalsLoaded = false;
+    } else {
+      _auth = value;
     }
-    _auth = value;
+    notifyListeners();
     fetchAndSetGoals();
   }
 
@@ -59,6 +68,7 @@ class Goals with ChangeNotifier {
     print('fetchAndSetGoals 1');
     if (userId == null) {
       _goals = [];
+      _goalsLoaded = false;
       notifyListeners();
       return;
     }
@@ -90,9 +100,8 @@ class Goals with ChangeNotifier {
       });
       print('parsed goals ${loadedGoals}');
       _goals = loadedGoals.reversed.toList();
+      _goalsLoaded = true;
     }
-    // print('setting goals to ${sampleGoals}');
-    // _goals = sampleGoals;
     notifyListeners();
   }
 

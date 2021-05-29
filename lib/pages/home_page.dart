@@ -1,3 +1,4 @@
+import 'package:bithabit/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -9,17 +10,10 @@ import 'package:bithabit/widgets/new_goal_tile.dart';
 import 'package:bithabit/widgets/plane_animation.dart';
 import 'package:bithabit/widgets/transparent_app_bar.dart';
 
+import 'auth_page.dart';
+
 class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final goalsData = context.watch<Goals>();
-
-    if (goalsData.areDailyGoalsFinished) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    } else {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    }
-
+  Widget _mainPage(Goals goalsData) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: AppDrawer(),
@@ -32,26 +26,57 @@ class HomePage extends StatelessWidget {
         child: Stack(
           children: [
             goalsData.areDailyGoalsFinished ? PlaneAnimation() : Container(),
-            ListView(
-              children: [
-                const TransparentAppBar(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 800,
+                ),
+                child: ListView(
                   children: [
-                    ...goalsData.activeGoals
-                        .map(
-                          (goal) => GoalTile(goal),
-                        )
-                        .toList(),
-                    const NewGoalTile(),
+                    const TransparentAppBar(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ...goalsData.activeGoals
+                            .map(
+                              (goal) => GoalTile(goal),
+                            )
+                            .toList(),
+                        if (goalsData.areGoalsLoaded) const NewGoalTile(),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final goalsData = context.watch<Goals>();
+    final isAuth = context.watch<Auth>().isAuth;
+    if (!isAuth) {
+      Future.delayed(Duration.zero, () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => AuthPage(),
+          ),
+        );
+      });
+    }
+
+    if (goalsData.areDailyGoalsFinished) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    }
+
+    return _mainPage(goalsData);
   }
 }
 

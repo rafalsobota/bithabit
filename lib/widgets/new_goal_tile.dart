@@ -79,7 +79,7 @@ class _NewGoalTileState extends State<NewGoalTile> {
               )
             : noGoals
                 ? const Text(
-                    'Add the first goal',
+                    'Add your first goal',
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 30,
