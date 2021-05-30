@@ -182,6 +182,10 @@ class _AuthPageState extends State<AuthPage> {
       const errorMessage =
           'Could not authenticate you. Please try again later.';
       _showErrorDialog(errorMessage);
+      print(error);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

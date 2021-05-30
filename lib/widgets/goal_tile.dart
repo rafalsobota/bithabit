@@ -115,6 +115,7 @@ class _GoalTileState extends State<GoalTile> {
                   ),
             subtitle: _editMode
                 ? FittedBox(
+                    alignment: Alignment.topRight,
                     fit: BoxFit.scaleDown,
                     child: ButtonBar(
                       children: [
