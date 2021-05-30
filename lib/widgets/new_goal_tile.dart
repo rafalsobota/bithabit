@@ -18,22 +18,28 @@ class NewGoalTile extends StatefulWidget {
 
 class _NewGoalTileState extends State<NewGoalTile> {
   bool _editMode = false;
-
   String _title = '';
+  bool _justSubmitted = false;
 
   void _submit(String value) async {
-    await context.read<Goals>().addGoal(
-          Goal(
-            active: true,
-            description: value,
-            id: '',
-            startDate: DateTime.now(),
-          ),
-        );
-    setState(() {
-      _editMode = false;
-      _title = '';
-    });
+    if (_justSubmitted) return;
+    _justSubmitted = true;
+    try {
+      await context.read<Goals>().addGoal(
+            Goal(
+              active: true,
+              description: value,
+              id: '',
+              startDate: DateTime.now(),
+            ),
+          );
+    } finally {
+      setState(() {
+        _editMode = false;
+        _title = '';
+        _justSubmitted = false;
+      });
+    }
   }
 
   @override
@@ -96,6 +102,7 @@ class _NewGoalTileState extends State<NewGoalTile> {
                     onPressed: () {
                       setState(() {
                         _editMode = false;
+                        _title = '';
                       });
                     },
                   ),

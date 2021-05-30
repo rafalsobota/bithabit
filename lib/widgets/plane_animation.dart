@@ -1,11 +1,20 @@
 import 'package:bithabit/widgets/rive_asset_animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+bool isMobileWeb(BuildContext context) {
+  return kIsWeb &&
+      (Theme.of(context).platform == TargetPlatform.iOS ||
+          Theme.of(context).platform == TargetPlatform.android);
+}
 
 class PlaneAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RiveAssetAnimation(
-      asset: 'assets/animations/plane.riv',
+      asset: isMobileWeb(context)
+          ? 'assets/animations/plane_simple.riv'
+          : 'assets/animations/plane.riv',
       animation: 'Animation 1',
       background: Container(
         decoration: const BoxDecoration(

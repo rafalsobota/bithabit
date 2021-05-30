@@ -15,7 +15,7 @@ import 'auth_page.dart';
 class HomePage extends StatelessWidget {
   Widget _mainPage(Goals goalsData) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       drawer: AppDrawer(),
       body: Theme(
         data: ThemeData(
@@ -40,10 +40,18 @@ class HomePage extends StatelessWidget {
                       children: [
                         ...goalsData.activeGoals
                             .map(
-                              (goal) => GoalTile(goal),
+                              (goal) => GoalTile(
+                                goal,
+                                key: ValueKey(goal.id),
+                              ),
                             )
                             .toList(),
-                        if (goalsData.areGoalsLoaded) const NewGoalTile(),
+                        if (goalsData.areGoalsLoaded)
+                          const NewGoalTile(
+                            key: ValueKey(
+                              'new-goal',
+                            ),
+                          ),
                       ],
                     )
                   ],

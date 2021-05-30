@@ -46,6 +46,7 @@ class _GoalTileState extends State<GoalTile> {
       child: Column(
         children: [
           ListTile(
+            key: ValueKey('goal-${widget.goal.id}-tile'),
             onTap: _editMode
                 ? null
                 : () async {
@@ -69,7 +70,7 @@ class _GoalTileState extends State<GoalTile> {
             leading: Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 opacity: allFinished ? 1 : 1,
                 child: widget.goal.completedToday
                     ? Icon(
